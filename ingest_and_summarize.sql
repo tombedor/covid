@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS daily_county_cumulative;
 .mode csv
-.import "us-counties.csv" daily_county_cumulative
+.import "data/us-counties.csv" daily_county_cumulative
 
 
 -- Lookup table so we can normalize a bit
@@ -35,8 +35,15 @@ INSERT INTO weekly_county_cumulative
 ;
 
 -- Table for new cases by week
-DROP TABLE IF EXISTS weekly_county
+DROP TABLE IF EXISTS weekly_county;
 CREATE TABLE weekly_county AS
 SELECT t1.week, t1.fips, t1.cases - t2.cases as cases, t1.deaths - t2.deaths as deaths
 FROM weekly_county_cumulative t1 JOIN weekly_county_cumulative t2 ON
   t1.fips = t2.fips AND date(t1.week, '-7 day') = t2.week;
+
+
+DROP TABLE IF EXISTS population_estimates_raw;
+.import "data/co-est2019-alldata.csv" population_estimates_raw
+
+DROP TABLE IF EXISTS census_populations;
+CREATE TABLE census_populations AS SELECT state || county as fips, CENSUS2010POP from population_estimates_raw;
