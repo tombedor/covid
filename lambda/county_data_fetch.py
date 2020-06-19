@@ -1,7 +1,11 @@
 import datetime
-import os
 import boto3
-import botocore.vendored.requests.packages.urllib3 as urllib3
+import requests.packages.urllib3 as urllib3
+import requests
+
+import json
+
+# from smart_open import open
 
 bucket = 'party-jams-dot-biz-covid-data'
 s3folder = 'nytimes-us-county'
@@ -15,7 +19,7 @@ def lambda_handler(event, context):
     key = s3folder + '/' + filename
     http = urllib3.PoolManager()
     response = requests.get(baseURL, stream=True)
-    with smart_open(s3url, 'wb') as fout:
+    with open('foo', 'wb') as fout:
         fout.write(response.content)
     
     
